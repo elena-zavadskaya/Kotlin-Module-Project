@@ -1,5 +1,4 @@
 class Menu {
-    private val menuFormatter = "%d. %s" // формат вывода
     private val menuItems = mutableListOf<MenuItem>()
 
     fun render(list: List<File>, fileType: String) {

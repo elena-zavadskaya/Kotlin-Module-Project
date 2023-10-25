@@ -72,7 +72,14 @@ fun main() {
                         }
                     },
                     { when (menuState) {
-                        MenuState.NOTES -> menuState = MenuState.ARCHIVE
+                        MenuState.VIEW -> {
+                            menuState = MenuState.NOTES
+                            selectedNoteIndex = -1
+                        }
+                        MenuState.NOTES -> {
+                            menuState = MenuState.ARCHIVE
+                            selectedArchiveIndex = -1
+                        }
                         else -> {
                             scanner.close()
                             exitProcess(0)
