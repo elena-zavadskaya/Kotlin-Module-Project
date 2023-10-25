@@ -1,10 +1,11 @@
-import java.lang.NumberFormatException
 import java.util.Scanner
 import kotlin.system.exitProcess
 
+val scanner = Scanner(System.`in`)
+const val commentError = "Вы ввели пустую строку. Попробуйте снова"
+
 fun main() {
     val archiveList = mutableListOf<Archive>()
-    val scanner = Scanner(System.`in`)
     val menu = Menu()
     var menuState = MenuState.ARCHIVE
     var selectedArchiveIndex = -1
@@ -27,42 +28,15 @@ fun main() {
             MenuState.CREATE -> {
                 when {
                     selectedArchiveIndex < 0 -> {
-                        while (true) {
-                            println("Введите наазвание архива")
-                            val name = scanner.nextLine()
-                            if (name.isNotEmpty()) {
-                                archiveList.add(Archive(name, mutableListOf()))
-                                menuState = MenuState.ARCHIVE
-                                break
-                            } else {
-                                println("Вы ввели пустую строку. Попробуйте снова")
-                            }
-                        }
+                        archiveList.add(Archive(isEmptyString("Введите название архива"), mutableListOf()))
+                        menuState = MenuState.ARCHIVE
                         continue
                     }
                     selectedArchiveIndex >= 0 -> {
-                        var name : String
-                        while (true) {
-                            println("Введите заголовок заметки ")
-                            name = scanner.nextLine()
-                            if (name.isNotEmpty()) {
-                                break
-                            } else {
-                                println("Вы ввели пустую строку. Попробуйте снова")
-                            }
-                        }
-
-                        while (true) {
-                            println("Введите текст заметки")
-                            val body = scanner.nextLine()
-                            if (body.isNotEmpty()) {
-                                archiveList[selectedArchiveIndex].notes.add(Note(name, body))
-                                menuState = MenuState.NOTES
-                                break
-                            } else {
-                                println("Вы ввели пустую строку. Попробуйте снова")
-                            }
-                        }
+                        archiveList[selectedArchiveIndex].notes.add(
+                            Note(isEmptyString("Введите заголовок заметки"),
+                                isEmptyString("Введите текст заметки")))
+                        menuState = MenuState.NOTES
                         continue
                     }
                 }
@@ -71,7 +45,16 @@ fun main() {
 
         while (true) {
             try {
-                val selectedIndex = scanner.nextLine().toInt()
+                var selectedIndex : Int
+                while (true) {
+                    selectedIndex = scanner.nextLine().toInt()
+                    if(selectedIndex >= 0) {
+                        break
+                    } else {
+                        println("Вы ввели что-то не то. Попробуйте снова")
+                    }
+                }
+
                 menu.select(
                     selectedIndex,
                     { menuState = MenuState.CREATE },
@@ -98,9 +81,23 @@ fun main() {
                     }
                 )
                 break
-            } catch (e: NumberFormatException) {
+            } catch (e: Exception) {
                 println("Вы ввели что-то не то. Попробуйте снова")
             }
         }
     }
+}
+
+fun isEmptyString(str: String): String {
+    var value: String
+    while (true) {
+        println(str)
+        value = scanner.nextLine()
+        if (value.isNotEmpty()) {
+            break
+        } else {
+            println(commentError)
+        }
+    }
+    return value
 }
