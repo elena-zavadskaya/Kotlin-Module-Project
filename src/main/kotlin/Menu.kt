@@ -9,7 +9,7 @@ class Menu {
         menuItems.add(MenuItem("Выход"))
 
         menuItems.forEachIndexed { index, archiveMenuItem ->
-            println(String.format(menuFormatter, index, archiveMenuItem.title))
+            println("$index. ${archiveMenuItem. title}")
         }
     }
 
@@ -23,8 +23,9 @@ class Menu {
                 onItem(index)
             }
             index == menuItems.lastIndex -> {
-                onCreate()
+                onClose()
             }
+            else -> println("Вы ввели что-то не то. Попробуйте снова")
         }
     }
 }
